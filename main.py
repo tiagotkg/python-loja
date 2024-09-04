@@ -14,6 +14,7 @@ from sqlalchemy.orm import Session
 import crud, models, schemas
 from database import SessionLocal, engine
 
+#teste
 # esse metodo cria nosso banco de dados caso ele não exista
 models.Base.metadata.create_all(bind=engine)
 
