@@ -1,4 +1,3 @@
-import datetime
 from pydantic import BaseModel
 
 # vamos criar a base dos nossos schemas para definir os atributos dos metodos do CRUD que também serão herdados
