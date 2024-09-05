@@ -14,18 +14,6 @@ services:
     networks:
       - python-loja-network
 
-  mysql:
-    container_name: python-loja-mysql
-    image: mysql
-    volumes:
-      - ../volumes/python-loja/mysql/:/var/lib/mysql
-    ports:
-      - "3306:3306"
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-    networks:
-      - python-loja-network
 
 networks:
   python-loja-network:
