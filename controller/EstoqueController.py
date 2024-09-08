@@ -1,18 +1,53 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
+from fastapi import HTTPException
 
-from model.Produto import Produto
+from model.Estoque import Estoque
 import schema
+from model.Produto import Produto
 
 
-# metodo utilizado para listar os lixos cadastrados
-def get_produto(db: Session, skip: int = 0, limit: int = 100):
-    return db.query(Produto).offset(skip).limit(limit).all()
+# metodo utilizado para listar os estoques cadastrados
+def get_estoque(db: Session, skip: int = 0, limit: int = 100):
+    return db.query(Estoque).options(joinedload(Estoque.produto)).all()
 
 
 # metodo utilizado para cadastrar um novo lixo
-def create_produto(db: Session, produto: schema.ProdutoSchema):
-    db_produto = Produto(**produto.model_dump())
-    db.add(db_produto)
+def create_estoque(db: Session, estoque: schema.EstoqueSchema.EstoqueCreate, entrada: bool):
+    db_estoque = Estoque(**estoque.model_dump())
+    db_estoque.entrada_saida = entrada
+
+    db_produto = db.query(Produto).filter(Produto.id == db_estoque.produto_id).first()
+    if db_produto is None:
+        raise HTTPException(status_code=404, detail="Produto não encontrado")
+
+    if(entrada):
+        db_produto.quantidade = (db_produto.quantidade + db_estoque.quantidade)
+    else:
+        db_produto.quantidade = (db_produto.quantidade - db_estoque.quantidade)
+
+
+    if(db_produto.quantidade <= db_produto.quantidade_minima):
+        print("Quantidade miníma antigida!")
+
+    db.commit()
+    db.add(db_estoque)
     db.commit()
     db.refresh(db_produto)
-    return db_produto
+    db.refresh(db_estoque)
+
+
+    return db_estoque
+
+
+def update_estoque(db: Session, estoque_id: int, estoque: schema.EstoqueSchema.EstoqueUpdate):
+    db_estoque = db.query(Estoque).filter(Estoque.id == estoque_id).first()
+    if db_estoque is None:
+        raise HTTPException(status_code=404, detail="Estoque não encontrado")
+
+    for key, value in estoque.model_dump().items():
+        if(value):
+            setattr(db_estoque, key, value)
+
+    db.commit()
+    db.refresh(db_estoque)
+    return db_estoque
