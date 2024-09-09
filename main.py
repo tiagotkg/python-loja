@@ -1,21 +1,14 @@
-
-from fastapi import Depends, FastAPI, HTTPException, status
-from math import trunc
-
+from fastapi import Depends, FastAPI
 from sqlalchemy.orm import Session
-import models
-
+from database import Base
 from schema import ProdutoSchema
 from controller import ProdutoController
-
 from schema import EstoqueSchema
 from controller import EstoqueController
-
-
 from database import SessionLocal, engine
 
 # esse metodo cria nosso banco de dados caso ele não exista
-models.Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
 # tags utilizadas para separar nossas rotas
 tags_metadata = [
