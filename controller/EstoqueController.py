@@ -1,9 +1,8 @@
 from sqlalchemy.orm import Session, joinedload
 from fastapi import HTTPException
-
 from model.Estoque import Estoque
-import schema
 from model.Produto import Produto
+import schema
 
 
 # metodo utilizado para listar os estoques cadastrados
@@ -25,7 +24,6 @@ def create_estoque(db: Session, estoque: schema.EstoqueSchema.EstoqueCreate, ent
     else:
         db_produto.quantidade = (db_produto.quantidade - db_estoque.quantidade)
 
-
     if(db_produto.quantidade <= db_produto.quantidade_minima):
         print("Quantidade miníma antigida!")
 
@@ -34,7 +32,6 @@ def create_estoque(db: Session, estoque: schema.EstoqueSchema.EstoqueCreate, ent
     db.commit()
     db.refresh(db_produto)
     db.refresh(db_estoque)
-
 
     return db_estoque
 

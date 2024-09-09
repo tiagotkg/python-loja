@@ -1,8 +1,6 @@
 from sqlalchemy.orm import Session, joinedload
 from fastapi import HTTPException
-
 from model.Produto import Produto
-from model.Estoque import Estoque
 import schema
 
 
@@ -14,8 +12,10 @@ def get_produto(db: Session, skip: int = 0, limit: int = 100):
 def get_produto_estoque(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Produto).options(joinedload(Produto.estoque)).offset(skip).limit(limit).all()
 
+
 def get_produto_estoque_alerta(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Produto).options(joinedload(Produto.estoque)).filter(Produto.quantidade <= Produto.quantidade_minima).all()
+
 
 # metodo utilizado para cadastrar um novo lixo
 def create_produto(db: Session, produto: schema.ProdutoSchema.ProdutoCreate):
