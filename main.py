@@ -61,11 +61,9 @@ async def update_estoque(estoque_id: int, estoque: EstoqueSchema.EstoqueUpdate, 
 async def get_estoque(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return EstoqueController.get_estoque(db, skip=skip, limit=limit)
 
-
 @app.get("/estoque/produtos/", response_model=list[ProdutoSchema.ProdutoEstoque], tags=["Open"])
 async def get_produto_estoque(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return ProdutoController.get_produto_estoque(db, skip=skip, limit=limit)
-
 
 @app.get("/estoque/produtos/alertas", response_model=list[ProdutoSchema.ProdutoEstoque], tags=["Open"])
 async def get_produto_estoque_alerta(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
