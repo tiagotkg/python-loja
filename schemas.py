@@ -1,4 +1,3 @@
-import datetime
 from pydantic import BaseModel
 
 # vamos criar a base dos nossos schemas para definir os atributos dos metodos do CRUD que também serão herdados
@@ -21,25 +20,6 @@ class DataEncodeDecode(BaseModel):
 # classe utilizada no request dos dados criptografados
 class DataEncoded(BaseModel):
     data: str
-
-
-# criando classe lixo base que vai ser herdada para os metodos LixoCreate e Lixo
-class TrashBase(BaseModel):
-    name: str
-    description: str
-    kilos: float
-
-# classe de criação do Lixo
-class TrashCreate(TrashBase):
-    pass
-
-# classe getter Lixo
-class Trash(TrashBase):
-    id: int
-    owner_id: int
-
-    class Config:
-        from_attributes = True
 
 # criando UserBase para ter atributos comuns ao criar ou recuperar os dados
 class UserBase(BaseModel):
