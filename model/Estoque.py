@@ -11,9 +11,9 @@ from database import Base
 class Estoque(Base):
     __tablename__ = "estoque"
 
-    id                  = Column(Integer, primary_key=True, autoincrement=True)
-    quantidade          = Column(Integer, nullable=False)
-    entrada_saida       = Column(Boolean, nullable=False)
-    produto_id          = Column(Integer, ForeignKey("produto.id"), nullable= False)
+    id              = Column(Integer, primary_key=True, autoincrement=True)
+    quantidade      = Column(Integer, nullable=False)
+    entrada_saida   = Column(Boolean, nullable=False)
+    produto_id      = Column(Integer, ForeignKey("produto.id"), nullable= False)
 
     produto = relationship("Produto", back_populates="estoque")

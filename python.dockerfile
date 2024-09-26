@@ -13,3 +13,4 @@ RUN pip install datetime
 RUN pip install cryptography
 RUN pip install sqlalchemy
 RUN pip install python-multipart
+RUN pip install jinja2
