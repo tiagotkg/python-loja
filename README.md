@@ -19,6 +19,7 @@
  pip install cryptography
  pip install sqlalchemy
  pip install python-multipart
+ pip install jinja2
 ```
 
 ## No terminal execute o comando:
