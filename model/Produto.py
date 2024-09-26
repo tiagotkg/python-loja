@@ -17,8 +17,9 @@ class Produto(Base):
     quantidade          = Column(Integer, nullable=False, default=0)
     quantidade_minima   = Column(Integer, nullable=False)
     preco               = Column(REAL, nullable=False)
-    preco_promocional   = Column(REAL, nullable=True)
+    preco_promocional   = Column(REAL, nullable=False)
     descricao           = Column(String, default=False)
     fornecedor          = Column(String, default=False)
 
-    estoque = relationship("Estoque", back_populates="produto")
+    estoque         = relationship("Estoque", back_populates="produto")
+    venda_produto   = relationship("VendaProduto", back_populates="produto")

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Cupom Fiscal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            width: 300px;
+            margin: auto;
+            border: 1px solid #000;
+            padding: 10px;
+        }
+        h1, h2 {
+            text-align: center;
+            margin: 5px 0;
+        }
+        .info {
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        .info p {
+            margin: 2px 0;
+        }
+        .item-header, .item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+        }
+        .item-header {
+            border-bottom: 1px dashed #000;
+            padding-bottom: 5px;
+            font-weight: bold;
+        }
+        .item {
+            margin: 5px 0;
+        }
+        .total {
+            font-weight: bold;
+            font-size: 1em;
+        }
+        hr {
+            border: none;
+            border-top: 1px dashed #000;
+            margin: 10px 0;
+        }
+        .message {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cupom Fiscal</h1>
+    <h2>Camelô Shops</h2>
+
+    <div class="info">
+        <p>Data: 26/09/2024 01:20:26</p>
+        <p>Cupom Fiscal Nº: {{ venda.id }}</p>
+    </div>
+
+    <div class="item-header">
+        <span>Descrição</span>
+        <span>Qtd</span>
+        <span>Valor Unitário</span>
+    </div>
+
+
+    {% for produto in produtos %}
+    <div class="item">
+        <span>{{ produto.produto.nome }}</span>
+        <span>{{ produto.quantidade }}</span>
+        <span>R$ {{ produto.produto.preco_promocional }}</span>
+    </div>
+    {% endfor %}
+
+    <hr>
+
+    <div class="item">
+        <span>Subtotal</span>
+        <span></span>
+        <span>R$ {{ venda.sub_total }}</span>
+    </div>
+    <div class="item">
+        <span>Desconto</span>
+        <span></span>
+        <span>- R$ {{ venda.desconto }}</span>
+    </div>
+    <div class="item total">
+        <span>Total</span>
+        <span></span>
+        <span>R$ {{ venda.total }}</span>
+    </div>
+
+    <div class="message">
+        <p>Obrigado pela preferência!</p>
+    </div>
+</body>
+</html>
