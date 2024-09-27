@@ -11,7 +11,9 @@ import schema
 from sqlalchemy.sql.operators import and_
 
 from schema.EstoqueSchema import EstoqueCreate
-
+from fastapi.responses import StreamingResponse
+import pandas as pd
+import io
 
 def get_venda(db: Session, skip: int = 0, limit: int = 100):
     return db.query(Venda).offset(skip).limit(limit).all()
@@ -105,3 +107,38 @@ def update_venda(db: Session, venda_id: int, venda: schema.VendaSchema.VendaUpda
     db.commit()
     db.refresh(db_venda)
     return db_venda
+
+
+def get_relatorio_vendas(db: Session):
+    vendas_produtos = get_venda_produtos(db)
+
+    venda = []
+    for venda_produto in vendas_produtos:
+        for produto in venda_produto.venda_produto:
+            venda.append({
+                "venda_id": venda_produto.id,
+                "data_venda": venda_produto.data,
+                "produto": produto.produto.nome, "quantidade": produto.quantidade,
+                "valor": produto.valor, "valor_promocional": produto.produto.preco_promocional,
+                "sub_total": venda_produto.sub_total, "desconto": venda_produto.desconto,
+                "total": venda_produto.total
+            })
+
+    df = pd.DataFrame(venda)
+
+    # Cria um buffer em memória para o arquivo Excel
+    output = io.BytesIO()
+
+    # Escreve o DataFrame no buffer como um arquivo Excel
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Relatório')
+
+    # Posiciona o cursor no início do buffer
+    output.seek(0)
+
+    # Define os headers para o download do arquivo
+    headers = {'Content-Disposition': 'attachment; filename="relatorio_vendas.xlsx"'}
+
+    # Retorna o arquivo como uma resposta de streaming
+    return StreamingResponse(output, media_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', headers=headers)
+

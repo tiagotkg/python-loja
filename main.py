@@ -1,5 +1,5 @@
 from fastapi import Depends, FastAPI, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, StreamingResponse
 from sqlalchemy.orm import Session
 from database import Base
 from schema import ProdutoSchema, CupomSchema, VendaSchema, EstoqueSchema
@@ -7,28 +7,20 @@ from controller import ProdutoController, CupomController, VendaController
 from controller import EstoqueController
 from database import SessionLocal, engine
 from fastapi.templating import Jinja2Templates
+import pandas as pd
+import io
+
 
 # esse metodo cria nosso banco de dados caso ele não exista
 Base.metadata.create_all(bind=engine)
 
 # tags utilizadas para separar nossas rotas
 tags_metadata = [
-    {
-        "name": "Produtos",
-        "description": "Rotas dos produtos",
-    },
-    {
-        "name": "Estoques",
-        "description": "Rotas dos estoques",
-    },
-    {
-        "name": "Cupons",
-        "description": "Rotas dos cupons",
-    },
-    {
-        "name": "Vendas",
-        "description": "Rotas das vendas",
-    }
+    {"name": "Produtos", "description": "Rotas dos produtos", },
+    {"name": "Estoques", "description": "Rotas dos estoques", },
+    {"name": "Cupons", "description": "Rotas dos cupons", },
+    {"name": "Vendas", "description": "Rotas das vendas", },
+    {"name": "Relatórios", "description": "Rotas dos relatórios", }
 ]
 
 
@@ -130,3 +122,15 @@ async def generate_cupom_fiscal(venda_id: int, request: Request, db: Session = D
     }
 
     return templates.TemplateResponse("index.html", contexto)
+
+@app.get("/relatorio/vendas", tags=["Relatorios"])
+async def relatorio_vendas(db: Session = Depends(get_db)):
+    return VendaController.get_relatorio_vendas(db)
+
+@app.get("/relatorio/estoque", tags=["Relatorios"])
+async def relatorio_estoque(db: Session = Depends(get_db)):
+    return ProdutoController.get_relatorio_estoque(db)
+
+@app.get("/relatorio/movimentacoes/estoque", tags=["Relatorios"])
+async def relatorio_movimentacoes_estoque(db: Session = Depends(get_db)):
+    return ProdutoController.get_relatorio_movimentacoes_estoque(db)

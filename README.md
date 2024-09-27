@@ -20,6 +20,8 @@
  pip install sqlalchemy
  pip install python-multipart
  pip install jinja2
+ pip install pandas
+ pip install openpyxl
 ```
 
 ## No terminal execute o comando:
