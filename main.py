@@ -123,14 +123,14 @@ async def generate_cupom_fiscal(venda_id: int, request: Request, db: Session = D
 
     return templates.TemplateResponse("index.html", contexto)
 
-@app.get("/relatorio/vendas", tags=["Relatorios"])
+@app.get("/relatorio/vendas", tags=["Relatórios"])
 async def relatorio_vendas(db: Session = Depends(get_db)):
     return VendaController.get_relatorio_vendas(db)
 
-@app.get("/relatorio/estoque", tags=["Relatorios"])
+@app.get("/relatorio/estoque", tags=["Relatórios"])
 async def relatorio_estoque(db: Session = Depends(get_db)):
     return ProdutoController.get_relatorio_estoque(db)
 
-@app.get("/relatorio/movimentacoes/estoque", tags=["Relatorios"])
+@app.get("/relatorio/movimentacoes/estoque", tags=["Relatórios"])
 async def relatorio_movimentacoes_estoque(db: Session = Depends(get_db)):
     return ProdutoController.get_relatorio_movimentacoes_estoque(db)
